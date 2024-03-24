@@ -1,4 +1,4 @@
-**Centos|Debian|Ubuntu** Command_README *Adiandroky*
+**Centos|Debian|Ubuntu** Command_README *Farstriders*
 ---
 # 第 1 次课	CentOS基础命令
 - ## 一、额外备注

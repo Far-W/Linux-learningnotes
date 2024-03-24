@@ -254,7 +254,7 @@
 ```
 ## 动态准备工作
 ```
-以上步奏与静态路由相同，不做重复
+以上步奏与静态路由相同，不做重复(以下步奏在开启路由转发后进行)
 安装quagga服务
 ```
 - ### 步奏1：
@@ -276,10 +276,10 @@
     version 2(使用ripv2协议)
     interface ens33 //第一张网卡
     ip rip authentication mode text
-    ip rip authentication password 123456
+    ip rip authentication password admin523
     interface ens36 //第二张网卡
     ip rip authentication mode text
-    ip rip authentication password 123456
+    ip rip authentication password admin523
     ```
 
 ```

@@ -329,16 +329,25 @@ samba/smbpasswd          用户映射文件    //虚拟用户文件
     server              //使用第三方主机验证
     domain              //使用域控制器的口令数据库验证
     ads                 //把系统配置为活动目录网络上的域名
-    passdb backend = tdbsam    //身份验证方式
+    passdb backend = tdbsam    //数据库验证格式
     tdbsam              //使用本地数据库验证用户身份
     ldapsam             //使用LDAP服务器验证用户身份
     smbpasswd           //使用smbpasswd文件验证用户身份
 
     [homes]  //用户宿主共享
+    valid user = %S     //共享
+    %s 共享所有
+    @group 代表某个组的用户登陆有效
+    用户名  代表只有这个用户登陆才有效
+
 
     [printers]  //打印机共享
+    path = /var/lib/samba/printers  //打印机共享路径
+    browseable = yes/no   //浏览权限
+    writable = yes/no    //读写权限
 
-    [print$]  自定义//设置其他目录共享     
+    [print$]  自定义//设置其他目录共享 
+    create mask = 070   //创建的文件的初始权限
  ```
 
         

@@ -292,6 +292,80 @@ ripd -d  //查看ripd服务是否正常
 
 -- 客户机互ping
 ```
+
+# samba服务器管理与配置
+
+    ```
+    扩展知识
+    cifs（网上邻居）
+    ftp（文件传输协议）
+    nfs/cifs   linux/unix 
+    smb(协议)
+    samba service 
+    功能：
+    共享文件与打印机
+    提供用户登陆时的身份验证
+    可以进行windows的主机名解析
+    可以进行设备的共享
+    samba中的两个进程守护
+    ambd：作用处理SMB请求包，负责用户验证，文件打印机共享
+    nmbd：管理工作组，负责主机名解析和浏览共享  // 对外发布samba可提供的服务
+    ```
+-  ### 准备工作（安装服务）
+```
+samba配置文件
+samba：
+/etc/samba/smb.conf   //主配置文件
+samba/smbpasswd          用户映射文件    //虚拟用户文件
+```
+    
+- # less /etc/samba/smb.conf    //配置文件讲解
+```
+
+    [global]  //全局变量配置
+    security = user     //用户验证/访问模式
+    share               //共享不需要登陆密码
+    user                //使用本地数据库验证用户身份(默认)
+    server              //使用第三方主机验证
+    domain              //使用域控制器的口令数据库验证
+    ads                 //把系统配置为活动目录网络上的域名
+    passdb backend = tdbsam    //身份验证方式
+    tdbsam              //使用本地数据库验证用户身份
+    ldapsam             //使用LDAP服务器验证用户身份
+    smbpasswd           //使用smbpasswd文件验证用户身份
+
+    [homes]  //用户宿主共享
+
+    [printers]  //打印机共享
+
+    [print$]  自定义//设置其他目录共享     
+ ```
+
+        
+```
+    查看是否拥有服务//rpm -qa|grep samba
+    安装samba服务（samba-4.xxxx）//他是双进程文件
+    yum install samba
+    yum install samba-client
+    yum install samba-common
+    yum install libs
+    安装完成后
+    systemctl start smb.service  //启动服务1
+    systemctl start nmb.service  //启动服务2
+    配置文件在/etc/samba/smb.conf
+    配置文件讲解：
+    使用vim  /etc/samba/smb.conf
+    具体内容：
+    ```
+        [share]
+        path = /home/share
+        browseable = yes
+        writable = yes
+        valid users = root
+        force user = root
+        force group = root
+        create mask = 077
+    ```
  
 
 

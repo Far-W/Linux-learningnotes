@@ -368,7 +368,7 @@ nmtui
 [root@localhost ~]# ifconfig ens33
 ens33: flags=4163<UP,BROADCAST,RUNNING,MULTICAST>  mtu 1500
         inet 192.168.2.1  netmask 255.255.255.0  broadcast 192.168.2.255
-        这里的192.168.2.1。请记住这个ip，待会配置完成会有用
+        //这里的192.168.2.1。请记住这个ip，待会配置完成会有用
 
         inet6 fe80::b335:a54a:2c84:8ac1  prefixlen 64  scopeid 0x20<link>
         ether 00:0c:29:c8:5a:93  txqueuelen 1000  (Ethernet)

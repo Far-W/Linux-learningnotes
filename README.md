@@ -1,4 +1,4 @@
-**Centos|Debian|Ubuntu** Command_README *Farstriders*
+**Centos|Debian|Ubuntu** Command_README 
 ---
 # 第 1 次课	CentOS基础命令
 - ## 一、额外备注
@@ -297,12 +297,12 @@ ripd -d  //查看ripd服务是否正常
 
     ```
     扩展知识
-    cifs（网上邻居）
+    cifs（网上邻居）  //只支持windows
     ftp（文件传输协议）
     nfs/cifs   linux/unix 
     smb(协议)
-    samba service 
-    功能：
+    samba service （服务器）//可跨系统共享文件
+    samba功能：
     共享文件与打印机
     提供用户登陆时的身份验证
     可以进行windows的主机名解析

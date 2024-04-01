@@ -351,31 +351,152 @@ samba/smbpasswd          用户映射文件    //虚拟用户文件
  ```
 
         
+- # 具体配置过程
 ```
-    查看是否拥有服务//rpm -qa|grep samba
-    安装samba服务（samba-4.xxxx）//他是双进程文件
-    yum install samba
-    yum install samba-client
-    yum install samba-common
-    yum install libs
-    安装完成后
-    systemctl start smb.service  //启动服务1
-    systemctl start nmb.service  //启动服务2
-    配置文件在/etc/samba/smb.conf
-    配置文件讲解：
-    使用vim  /etc/samba/smb.conf
-    具体内容：
-    ```
-        [share]
-        path = /home/share
+开始之前请完成静态路由的路由转发部分以及IP地址的部署，可参考我丢配置，如下
+VMnet2   centOS中：ens33   192.168.2.1/24    网关：192.168.2.254。
+                  客户机:192.168.2.2/24  网关：192.168.2.254
+                  客户机还需要关闭防火墙
+                   开启lan认证：win+r    输入“secpol.msc”
+                  选择“本地策略”——“安全选项”——“网络安全：LAN Manager  身份验证级别”——然后点击属性，选择”发送
+LM和NTLM-若协商……“——应用，确定。
+                  
+以下是完成基本配置后需要做的：
+
+nmtui
+[root@localhost ~]# systemctl restart network
+[root@localhost ~]# ifconfig ens33
+ens33: flags=4163<UP,BROADCAST,RUNNING,MULTICAST>  mtu 1500
+        inet 192.168.2.1  netmask 255.255.255.0  broadcast 192.168.2.255
+        这里的192.168.2.1。请记住这个ip，待会配置完成会有用
+
+        inet6 fe80::b335:a54a:2c84:8ac1  prefixlen 64  scopeid 0x20<link>
+        ether 00:0c:29:c8:5a:93  txqueuelen 1000  (Ethernet)
+        RX packets 68  bytes 8695 (8.4 KiB)
+        RX errors 0  dropped 0  overruns 0  frame 0
+        TX packets 68  bytes 9003 (8.7 KiB)
+        TX errors 0  dropped 0 overruns 0  carrier 0  collisions 0
+
+[root@localhost ~]# mkdir -p /var/samba/shared
+[root@localhost ~]# vim /var/samba/shared/11.txt
+在文件中输入任意能容
+esc键，键入":wq"保存退出
+[root@localhost ~]# useradd wx
+[root@localhost ~]# passwd wx
+更改用户 wx 的密码 。
+新的 密码：
+无效的密码： 密码未通过字典检查 - 它基于字典单词
+重新输入新的 密码：
+passwd：所有的身份验证令牌已经成功更新。
+[root@localhost ~]# cp /etc/sa
+samba/  sane.d/ sasl2/  
+[root@localhost ~]# cp /etc/samba/smb.conf /etc/samba/smb.conf.bak
+[root@localhost ~]# vim /etc/samba/smb.conf
+其中的更改内容在此页面最下方
+
+
+[root@localhost ~]# smbpasswd -a wx
+                                      admin523（密码可自定义）
+                                      admin523
+
+[root@localhost ~]#systemctl stop firwalld
+[root@localhost ~]#systemctl start smb.service
+[root@localhost ~]#systemctl start nmb.service
+[root@localhost ~]#systemctl restart smb.service
+[root@localhost ~]#systemctl restart nmb.service
+
+
+到这里就完成了，可以去客户机访问你刚刚记住的ip
+
+
+[global]
+        workgroup = workgroup
+        security = user
+        netbios name=MYSERVER
+        passdb backend = tdbsam
+        encrypt passwords=yes
+        ntlm auth=yes
+        printing = cups
+        printcap name = cups
+        load printers = yes
+        cups options = raw
+
+[homes]
+        comment = Home Directories
+        valid users = %S
         browseable = yes
-        writable = yes
-        valid users = root
-        force user = root
-        force group = root
-        create mask = 077
-    ```
+        read only = yes
+
+[printers]
+        comment = All Printers
+        path = /var/tmp
+        printable = Yes
+        create mask = 0600
+        browseable = No
+
+[wxshare$]
+        comment = Pubic stuff
+        path = /var/samba/shared
+        writeable=yes
+        browseable=yes
+        create mask = 0664
+                                                              36,2-9       底端
+
+```
  
+# 第 5 次课  DHCP服务器配置
+- ## 1. 基础知识
+```
+- 概述
+    DHCP服务器：
+    DHCP起源BOOTP   //无盘工作站
+    DHCP  动态主机配置协议   //可以为客户端动态分配ip
+
+    DHCP客户机   discovers   //发现    广播
+    DHCP服务器   offers     //提供 地址、掩码、网关、dns服务器    广播
+    DHCP客户机   requests    //请求   使用第一响应的服务分配地址   广播
+    DHCP服务器   ack         //确认   单播
+- 工作原理
+    IP地址租约和更新
+    在租期到期之前，客户端会向服务器发送两次DHCP请求，用以更新租约
+    DHCP服务器会发送DHCPACK给客户端，表示租约更新成功或失败，失败则重新请求地址
+```
+- ## 2. DHCP安装包
+dhcp-4.2.5-9.el7.x86_64.rpm
+dhcp-libs-4.2.5-9.el7.x86_64.rpm   //DHCP服务器和客户端使用的共享库
+dhcp-common-4.2.5-9.el7.x86_64.rpm   //
+- ## 3. 配置文件
+dhcpd.conf
+```
+subnet 192.168.2.0 netmask 255.255.255.0 {
+    host 192.168.2.100 {
+        hardware ethernet 00:0c:29:c8:5a:93;
+        fixed-address 192.168.2.100;
+        }
+        range 192.168.2.100 192.168.2.200;
+}
+
+```
 
 
-    
+
+以下是配置内容
+- # A slightly different configuration for an internal subnet.
+```
+ddns-update-style none;
+log-facility local7;
+default-lesase-time 600;
+max-lease-time 3600;
+subnet 192.168.2.0 netmask 255.255.255.0{
+  range 192.168.2.50 192.168.2.100;
+  option domain-name-servers 192.168.2.1,114.114.114.114;
+  option domain-name "JQE.com";
+  option routers 192.168.2.1;
+  option broadcast-address 192.168.2.254;
+}
+host dhcpclient{
+  hardware ethernet 00:0c:29:8e:d6:58;
+  fix-address 192.168.2.70;
+}
+```
+~          

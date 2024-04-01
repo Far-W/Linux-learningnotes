@@ -464,39 +464,30 @@ samba/  sane.d/ sasl2/
 - ## 2. DHCP安装包
 dhcp-4.2.5-9.el7.x86_64.rpm
 dhcp-libs-4.2.5-9.el7.x86_64.rpm   //DHCP服务器和客户端使用的共享库
-dhcp-common-4.2.5-9.el7.x86_64.rpm   //
+dhcp-common-4.2.5-9.el7.x86_64.rpm   //DHCP服务器的配置文件
 - ## 3. 配置文件
+/etc/dhcp/dhcpd.conf
+-
 dhcpd.conf
-```
-subnet 192.168.2.0 netmask 255.255.255.0 {
-    host 192.168.2.100 {
-        hardware ethernet 00:0c:29:c8:5a:93;
-        fixed-address 192.168.2.100;
-        }
-        range 192.168.2.100 192.168.2.200;
-}
-
-```
-
-
-
+-
 以下是配置内容
-- # A slightly different configuration for an internal subnet.
+-
 ```
 ddns-update-style none;
 log-facility local7;
-default-lesase-time 600;
+default-lease-time 600;
 max-lease-time 3600;
-subnet 192.168.2.0 netmask 255.255.255.0{
-  range 192.168.2.50 192.168.2.100;
-  option domain-name-servers 192.168.2.1,114.114.114.114;
+subnet 192.168.175.0 netmask 255.255.255.0{
+  range 192.168.175.110 192.168.175.130;
+  option domain-name-servers 202.102.192.68;
   option domain-name "JQE.com";
-  option routers 192.168.2.1;
-  option broadcast-address 192.168.2.254;
+  option routers 192.168.175.254;
+  option broadcast-address 192.168.175.254;
 }
 host dhcpclient{
   hardware ethernet 00:0c:29:8e:d6:58;
-  fix-address 192.168.2.70;
+  fix-address 192.168.175.70;
 }
+
 ```
 ~          

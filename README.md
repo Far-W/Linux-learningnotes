@@ -445,7 +445,8 @@ samba/  sane.d/ sasl2/
 ```
  
 # 第 5 次课  DHCP服务器配置
-- ## 1. 基础知识
+ ## 基础理论
+- ### 1. 基础知识
 ```
 - 概述
     DHCP服务器：
@@ -466,6 +467,7 @@ dhcp-4.2.5-9.el7.x86_64.rpm
 dhcp-libs-4.2.5-9.el7.x86_64.rpm   //DHCP服务器和客户端使用的共享库
 dhcp-common-4.2.5-9.el7.x86_64.rpm   //DHCP服务器的配置文件
 - ## 3. 配置文件
+模板文件：/usr/share/doc/dhcp-xx/dhcpd.comf.example
 /etc/dhcp/dhcpd.conf
 -
 dhcpd.conf
@@ -491,3 +493,9 @@ host dhcpclient{
 
 ```
 ~          
+
+ ## DHCP中继代理
+ - ###  
+
+
+# 第 6 次课  DHCP服务器配置

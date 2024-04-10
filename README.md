@@ -519,13 +519,71 @@ dns :域名系统
         负载均衡：
         反向解析：    
     DNS服务器： 
-        递归查询：
-        迭代查询：
+        递归查询：当服务器无法解析时，会让其他DNS服务器进行查询    //客户机与服务器
+        迭代查询：当服务器查询地址时，会向其他DNS服务器进行查询，直到找到为止   //服务器与服务器
             补充:hosts文件（缓存文件）    //域名——IP地址映射
+    DNS解析：
+        正向解析：域名——IP   // 域名解析IP	
+        逆向解析：IP——域名   // IP解析域名
     DNS服务器分类：
         主DNS服务器：为区域提供DNS服务
         从DNS服务器：DNS服务查询工作
         高速缓存DNS：使用缓存的DNS信息进行域名装换，（速度较快）
+```
+DNS服务安装
+```
+bind-x.x.x.     //DNS服务主程序包
+bind-libs-x.x.x.x      //DNS服务主程序包的依赖包，库文件
+bind-utils-x.x.x.x      //DNS服务主程序包的依赖包，工具
+bind-chroot-x.x.x.x
+bind-devel-x.x.x.x
+```
+- ## DNS配置文件
+
+- 位置：/etc/named.conf     //主配置文件
+```
+options {       //全局配置
+    listen-on port 53 { any; };   //监听的IP地址的端口：any为所有：也可指定ip
+    allow-query { any; };     //允许查询的网段：any为所有,可指定ip，localhost为本地
+    dnssec-enable yes;     //是否允许DNSSEC
+    dnssec-validation yes;     //是否允许DNSSEC验证
+    recursion yes;     //是否允许递归查询
+} 
+
+
+logging {      //日志配置
+    channels {     //日志通道
+        local0 {     //日志通道名称
+            file "/var/log/named/named.run";   文件路径	
+            severity dynamic;   //日志级别状态
+        }
+    }
+
+}     
+
+
+zone "." IN {    //根区域，定义解析区域      这部分易出错，建议放到扩展配置文件中
+    type hint;     //类型
+    file "named.ca";     //文件路径
+} ;
+include "/etc/named.rfc1912.zones";     //引入其他区域配置文件
+include "/etc/named.root.key";     //引入其他区域配置文件
+
+根域//定义根域的区域文件为named.ca，文件的位置为/var/named/named.ca。在拓展配置中会使用到此文件
+```
+- ## 配置拓展区域文件
+-位置：/etc/named.rfc1912.zones  //模板文件位置
+```
+    zone "." IN {    //根区域，定义解析区域
+        type hint;     //类型
+        file "named.ca";     //文件路径
+        allow-update { none; };     //允许更新
+    } ;
+    zone "jqe.com" IN {    //定义解析区域
+        type master;     //类型
+        file "jqe.com.zone";     //文件路径
+        allow-update { none; };     //允许更新  
+    }
 ```
 
 

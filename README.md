@@ -467,7 +467,9 @@ dhcp-4.2.5-9.el7.x86_64.rpm
 dhcp-libs-4.2.5-9.el7.x86_64.rpm   //DHCP服务器和客户端使用的共享库
 dhcp-common-4.2.5-9.el7.x86_64.rpm   //DHCP服务器的配置文件
 - ## 3. 配置文件
+
 模板文件：/usr/share/doc/dhcp-xx/dhcpd.comf.example
+-
 /etc/dhcp/dhcpd.conf
 -
 dhcpd.conf
@@ -496,6 +498,34 @@ host dhcpclient{
 
  ## DHCP中继代理
  - ###  
+ -
+ 开启所有DHCP中继
+ -
+ dhcrelay DHCP
+ -
+开启指定网卡的dhcp中继
+-
+ dhcrelay -i 网卡
 
 
-# 第 6 次课  DHCP服务器配置
+
+
+# 第 6 次课  DNS服务器配置
+- ## DNS概述：
+```
+dns :域名系统
+    作用：
+        域名解析：
+        负载均衡：
+        反向解析：    
+    DNS服务器： 
+        递归查询：
+        迭代查询：
+            补充:hosts文件（缓存文件）    //域名——IP地址映射
+    DNS服务器分类：
+        主DNS服务器：为区域提供DNS服务
+        从DNS服务器：DNS服务查询工作
+        高速缓存DNS：使用缓存的DNS信息进行域名装换，（速度较快）
+```
+
+

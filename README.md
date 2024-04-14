@@ -583,7 +583,7 @@ include "/etc/named.root.key";     //引入其他区域配置文件
         type master;     //类型
         file "jqe.com.zone";     //文件路径
         allow-update { none; };     //允许更新  
-    }
+    }1
 ```
 
 '

@@ -572,19 +572,41 @@ include "/etc/named.root.key";     //引入其他区域配置文件
 根域//定义根域的区域文件为named.ca，文件的位置为/var/named/named.ca。在拓展配置中会使用到此文件
 ```
 - ## 配置拓展区域文件
+-区域文件一般放在/var/named/ 中，一般每个区域需要放俩个区域文件，即正/反向区域文件，一般有六种资源记录
+```
+SOA              //资源记录起始授权记录，一个区域只有一个
+NA               //资源记录名称服务器资源记录
+A                //正向解析资源记录
+PTR              //反向解析资源记录
+MX               //邮件资源记录
+CNAME            //别名资源记录
+```
+-区域类型：
+```
+master              //主域
+slave               //辅助域
+stub                //只复制ns
+forward             //转发域
+hint                //根域
+delegation-only     //用于强制区域的delegation.ly状态
+```
 -位置：/etc/named.rfc1912.zones  //模板文件位置
 ```
     zone "." IN {    //根区域，定义解析区域
         type hint;     //类型
         file "named.ca";     //文件路径
-        allow-update { none; };     //允许更新
+        allow-update { none; };     //允许更新，此选项可不写
     } ;
     zone "jqe.com" IN {    //定义解析区域
         type master;     //类型
         file "jqe.com.zone";     //文件路径
         allow-update { none; };     //允许更新  
-    }1
+    }
 ```
-
+-配置文件的检测工具
+```
+named -checkzone   域名  区域文件
+eg.namde-checkzone  JQE.com.zone
+```
 '
 

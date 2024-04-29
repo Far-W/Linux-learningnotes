@@ -608,5 +608,78 @@ delegation-only     //用于强制区域的delegation.ly状态
 named -checkzone   域名  区域文件
 eg.namde-checkzone  JQE.com.zone
 ```
-'
+
+
+
+
+# 第 7 次课  Web服务器配置
+## 一，概述
+```
+-万维网三要素：http、html、url
+-http协议：超文本传输协议，规定了浏览器和万维网服务器之间互相通信的规则
+-html：超文本标记语言，规定了网页的标签
+-url：统一资源定位符，规定了资源在互联网中的地址
+```
+### 1.1 Web
+```
+-web服务器：接收客户端的请求，将请求的资源返回给客户端
+  动态两种架构：
+    LAMP：linux+apache+mysql+php
+        L：linux操作系统
+        A：apache服务器
+        M：mysql数据库
+        P：php解释器(编程语言)
+    全套微软：
+        Windows服务器：
+        IIS：服务器
+        MSSQL：数据库
+        ASP：编程语言
+```
+### 1.2 apache服务器安装
+```
+rpm -qa|grep httpd           //查看是否安装了apache服务器
+    httpd-tools-2.4.6-88.el7.centos.x86_64    //工具包
+    httpd-2.4.6-88.el7.centos.x86_64          //服务包
+    httpd-devel-2.4.6-88.el7.centos.x86_64   //开发包
+
+yum -y install httpd         //安装apache服务器
+systemctl start httpd          //启动apache服务器
+
+```
+###  1.3 apache相关目录与配置文件
+```
+-配置文件：/etc/httpd/conf/httpd.conf
+
+-主配置文件：/etc/httpd/conf/httpd.conf
+
+-虚拟主机配置文件目录：/etc/httpd/conf.d/      //这是目录，里面存放附加配置文件
+-conf.d目录中，所有的.conf文件，全部包含进主配置文件，用户可以在不修改主配置文件的情况下，通过修改conf.d目录中的配置文件，来达到配置虚拟主机的目的。
+
+-日志文件：/var/log/httpd/access_log
+
+-网站发布默认文档根目录：/var/www/html/    
+```
+### 1.4 配置文件详解：
+```
+1、global                          //全局配置
+        serverRoot                        //服务器根目录
+        listen                            //监听端口
+        pidFile                           //进程号文件
+        user                              //运行用户
+        group                             //运行组
+        serverAdmin                       //管理员邮箱
+        serverName                        //主机名
+        <   目录>                         //目录访问控制
+2、main server                     //主服务配置
+        DocumentRoot                      //网站文档根目录
+        DirectoryIndex                    //首页名称
+        AddDefaultCharset                  //编码格式
+
+3、virtual host                    //虚拟主机配置
+```
+
+### 2 配置过程
+```
+
+```
 

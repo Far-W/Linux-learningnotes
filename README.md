@@ -680,6 +680,25 @@ systemctl start httpd          //启动apache服务器
 
 ### 2 配置过程
 ```
+cd /home/wangxin/public_html/      //在这个文件路径中存放.html文件以及辅助文件，如.css .js等
 
-```
+vim XX.html    //编辑这个文件
+
+[root@localhost ~]# vim /etc/named.conf                     //这里编辑dns服务
+更改三个“any”
+
+[root@localhost ~]# vim /etc/named.rfc1912.zones            //dns服务编辑
+zone "wangxin.jw4b.com" IN {
+        type master;
+        file "wangxin.com.zone";      //域名反向解析的文件名，通常在  /var/named/当中，其创建过程为：cp named.localhost  wangxin.com.zone//
+        allow-update { none; };
+};
+编辑如上的域名，以便使用域名访问web个人网页  上图为“www.wangxin.jw4b.com"
+
+/etc/httpd/conf/httpd.conf            //编辑主配置文件
+‘
+
+’
+
+```  
 

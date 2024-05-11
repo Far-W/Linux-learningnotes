@@ -608,6 +608,8 @@ delegation-only     //用于强制区域的delegation.ly状态
 named -checkzone   域名  区域文件
 eg.namde-checkzone  JQE.com.zone
 ```
+## 配置named步骤
+cd /var/named/nam   
 
 
 
@@ -678,7 +680,7 @@ systemctl start httpd          //启动apache服务器
 3、virtual host                    //虚拟主机配置
 ```
 
-### 2 配置过程
+### 2 配置需要更改的文件
 ```
 cd /home/wangxin/public_html/      //在这个文件路径中存放.html文件以及辅助文件，如.css .js等
 
@@ -691,14 +693,134 @@ vim XX.html    //编辑这个文件
 zone "wangxin.jw4b.com" IN {
         type master;
         file "wangxin.com.zone";      //域名反向解析的文件名，通常在  /var/named/当中，其创建过程为：cp named.localhost  wangxin.com.zone//
-        allow-update { none; };
+        allow-update { none; };   
 };
 编辑如上的域名，以便使用域名访问web个人网页  上图为“www.wangxin.jw4b.com"
 
-/etc/httpd/conf/httpd.conf            //编辑主配置文件
-‘
+```
+### 3 配置httpd服务过程
+--------------------------------------------------------------------
+1,更改网卡设置
+2，systemctl stop firewalld.service     //关闭防火墙
+2，cd /home/wenjianm/zhiwenjianming/htmlwenjian.html或/var/www/html/wenjian.html
+wenjianming.html     //进入这个文件可进行网页内容的撰写
+3，vim /etc/httpd/conf/httpd.conf        //编辑主配置文件  
+4，systemctl restart httpd.service        //重启httpd服务
 
-’
+---------------------------------------------------------------------
 
-```  
+```
+[root@localhost ~]# mkdir /var/web1
+[root@localhost ~]# mkdir /var/web2
+[root@localhost ~]# echo "this is my web of host 192.168.1.1">> /var/web1/index.html
+[root@localhost ~]# vim /var/web2/index.html
+[root@localhost ~]# chmod -R 777 /var/web1
+[root@localhost ~]# chmod 777 /var/web1/index.html 
+[root@localhost ~]# chmod -R 777 /var/web2
+[root@localhost ~]# chmod 777 /var/web2/index.html 
+[root@localhost ~]# mkdir -p /var/log/httpd/www.web1.com 
+[root@localhost ~]# mkdir -p /var/log/httpd/www.web2.com 
+[root@localhost ~]# touch /var/log/httpd/www.web1.com/error.log
+[root@localhost ~]# touch /var/log/httpd/www.web2.com/error.log
+[root@localhost ~]# vim /etc/httpd/conf.d/ipvh.conf
+            --------------------------------------
+            <VirtualHost 192.168.1.1>
+            ServerAdmin webmaster@web1.com
+            DocumentRoot /var/web1
+            ServerName www.web1.com
+            ErrorLog /var/log/httpd/www.web1.com/error.log
+            </virtualHost>
+            <VirtualHost 192.168.1.2>
+            ServerAdmin webmaster@web2.com
+            DocumentRoot /var/web2
+            ServerName www.web2.com
+            ErrorLog /var/log/httpd/www.web2.com/error.log
+            </virtualHost>
 
+            --------------------------------------
+
+[root@localhost ~]# vim  /etc/selinux/config 
+            --------------------------------------
+            SELINUX=disabled
+            --------------------------------------
+[root@localhost ~]# systemctl restart httpd
+[root@localhost ~]# vim /etc/httpd/conf/httpd.conf
+            ------------------------------------------
+            ServerName 192.168.1.1
+
+            <Directory />
+                AllowOverride none
+                # Require all denied
+            </Directory>
+            ------------------------------------------
+
+[root@localhost ~]# systemctl restart httpd
+```
+
+承接上面的操作，接着：
+```
+
+ nmtui
+[root@localhost ~]# systemctl restart network
+[root@localhost ~]# vim /etc/named.conf
+[root@localhost ~]# vim /etc/named.rfc1912.zones
+[root@localhost ~]# cd /var/named/
+[root@localhost named]# cp named.localhost b.com.zone
+[root@localhost named]# vim b.com.zone 
+                -------------------------------------------
+                $TTL 1D
+				@	IN SOA	b.com. root.b.com. (
+								0	; serial
+								1D	; refresh
+								1H	; retry
+								1W	; expire
+								3H )	; minimum
+				@ IN NS dns.b.com.
+				dns IN A 192.168.1.1
+				www IN A 192.168.1.1
+                -------------------------------------------
+
+[root@localhost named]# cp named.localhos s.com.zone
+[root@localhost named]# vim s.com.zone 
+                -------------------------------------------
+                $TTL 1D
+				@	IN SOA	s.com. root.s.com. (
+								 0	; serial
+								1D	; refresh
+								1H	; retry
+								1W	; expire
+								3H )	; minimum
+				@ IN NS dns.s.com.
+				dns IN A 192.168.1.1
+				www IN A 192.168.1.1
+                -------------------------------------------
+
+[root@localhost named]# chown root:named s.com.zone 
+[root@localhost named]# chown root:named b.com.zone 
+[root@localhost named]# mkdir -p /var/webs/s
+[root@localhost named]# mkdir -p /var/webs/b
+[root@localhost named]# echo "Welcom to www.s.com">>/var/webs/s/index.html
+[root@localhost named]# echo "Welcom to www.b.com">>/var/webs/b/index.html
+[root@localhost named]# chmod -R 777 /var/webs/s
+[root@localhost named]# chmod -R 777 /var/webs/b
+[root@localhost named]# chmod  777 /var/webs/b/index.html 
+[root@localhost named]# chmod  777 /var/webs/s/index.html 
+[root@localhost named]# vim /etc/httpd/conf.d/ymvh.conf
+					--------------------------------------------------
+                    <VirtualHost 192.168.1.1>
+   					 ServerAdmin webmaster@s.com
+    				 DocumentRoot /var/webs/s
+    				 ServerName www.s.com
+    				 directoryindex index.html
+					</VirtualHost>
+					<VirtualHost 192.168.1.1>
+    				 ServerAdmin webmaster@b.com
+    				 DocumentRoot /var/webs/b
+    				 ServerName www.b.com
+    				 directoryindex index.html
+					</VirtualHost>
+					--------------------------------------------------
+[root@localhost named]# systemctl restart httpd
+[root@localhost named]# systemctl restart named
+
+```

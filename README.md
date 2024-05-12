@@ -812,7 +812,7 @@ wenjianming.html     //进入这个文件可进行网页内容的撰写
 [root@localhost named]# vim /etc/httpd/conf.d/ymvh.conf
 		--------------------------------------------------
         <VirtualHost 192.168.1.1>
-   			ServerAdmin webmaster@s.com
+		ServerAdmin webmaster@s.com
     		DocumentRoot /var/webs/s
     		ServerName www.s.com
     		directoryindex index.html

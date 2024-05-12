@@ -611,6 +611,10 @@ eg.namde-checkzone  JQE.com.zone
 ## 配置named步骤
 cd /var/named/nam   
 
+###  完整配置过程代写
+```
+有时间再搞这里，现在没精力，
+```
 
 
 
@@ -739,9 +743,9 @@ wenjianming.html     //进入这个文件可进行网页内容的撰写
 
             --------------------------------------
 
-[root@localhost ~]# vim  /etc/selinux/config 
+[root@localhost ~]# vim  /etc/selinux/config     //并不是每一个都要改，但还是建议用cat命令检查一下
             --------------------------------------
-            SELINUX=disabled
+            SELINUX=disabled      //此处为更改过后的样式
             --------------------------------------
 [root@localhost ~]# systemctl restart httpd
 [root@localhost ~]# vim /etc/httpd/conf/httpd.conf
@@ -767,33 +771,33 @@ wenjianming.html     //进入这个文件可进行网页内容的撰写
 [root@localhost ~]# cd /var/named/
 [root@localhost named]# cp named.localhost b.com.zone
 [root@localhost named]# vim b.com.zone 
-                -------------------------------------------
-                $TTL 1D
-				@	IN SOA	b.com. root.b.com. (
-								0	; serial
-								1D	; refresh
-								1H	; retry
-								1W	; expire
-								3H )	; minimum
-				@ IN NS dns.b.com.
-				dns IN A 192.168.1.1
-				www IN A 192.168.1.1
-                -------------------------------------------
+        -------------------------------------------
+        $TTL 1D
+		@	IN SOA	b.com. root.b.com. (
+							0	; serial
+							1D	; refresh
+							1H	; retry
+							1W	; expire
+							3H )	; minimum
+		@ IN NS dns.b.com.
+	    dns IN A 192.168.1.1
+		www IN A 192.168.1.1
+        -------------------------------------------
 
 [root@localhost named]# cp named.localhos s.com.zone
 [root@localhost named]# vim s.com.zone 
-                -------------------------------------------
-                $TTL 1D
-				@	IN SOA	s.com. root.s.com. (
-								 0	; serial
-								1D	; refresh
-								1H	; retry
-								1W	; expire
-								3H )	; minimum
-				@ IN NS dns.s.com.
-				dns IN A 192.168.1.1
-				www IN A 192.168.1.1
-                -------------------------------------------
+        -------------------------------------------
+        $TTL 1D
+		@	IN SOA	s.com. root.s.com. (
+							0	; serial
+							1D	; refresh
+							1H	; retry
+							1W	; expire
+							3H )	; minimum
+		@ IN NS dns.s.com.
+		dns IN A 192.168.1.1
+		www IN A 192.168.1.1
+        -------------------------------------------
 
 [root@localhost named]# chown root:named s.com.zone 
 [root@localhost named]# chown root:named b.com.zone 
@@ -806,20 +810,20 @@ wenjianming.html     //进入这个文件可进行网页内容的撰写
 [root@localhost named]# chmod  777 /var/webs/b/index.html 
 [root@localhost named]# chmod  777 /var/webs/s/index.html 
 [root@localhost named]# vim /etc/httpd/conf.d/ymvh.conf
-					--------------------------------------------------
-                    <VirtualHost 192.168.1.1>
-   					 ServerAdmin webmaster@s.com
-    				 DocumentRoot /var/webs/s
-    				 ServerName www.s.com
-    				 directoryindex index.html
-					</VirtualHost>
-					<VirtualHost 192.168.1.1>
-    				 ServerAdmin webmaster@b.com
-    				 DocumentRoot /var/webs/b
-    				 ServerName www.b.com
-    				 directoryindex index.html
-					</VirtualHost>
-					--------------------------------------------------
+		--------------------------------------------------
+        <VirtualHost 192.168.1.1>
+   			ServerAdmin webmaster@s.com
+    		DocumentRoot /var/webs/s
+    		ServerName www.s.com
+    		directoryindex index.html
+		</VirtualHost>
+		<VirtualHost 192.168.1.1>
+    		ServerAdmin webmaster@b.com
+    		DocumentRoot /var/webs/b
+    		ServerName www.b.com
+    		directoryindex index.html
+		</VirtualHost>
+		--------------------------------------------------
 [root@localhost named]# systemctl restart httpd
 [root@localhost named]# systemctl restart named
 

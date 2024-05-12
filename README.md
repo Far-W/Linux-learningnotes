@@ -789,11 +789,11 @@ wenjianming.html     //进入这个文件可进行网页内容的撰写
         -------------------------------------------
         $TTL 1D
 		@	IN SOA	s.com. root.s.com. (
-							0	; serial
-							1D	; refresh
-							1H	; retry
-							1W	; expire
-							3H )	; minimum
+					0	; serial
+					1D	; refresh
+					1H	; retry
+					1W	; expire
+					3H )	; minimum
 		@ IN NS dns.s.com.
 		dns IN A 192.168.1.1
 		www IN A 192.168.1.1

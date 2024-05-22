@@ -934,11 +934,6 @@ ftp工作原理：
 [root@localhost ~]# systemctl restart vsftpd
 
 
-```
-
-
-
-```
 
 
 

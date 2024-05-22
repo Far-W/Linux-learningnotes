@@ -845,7 +845,7 @@ chmod 755 -R 目录
 配置文件：vim /etc/vsftpd/vsftpd.conf
 		
 -------------------------------------------------------------------------------
- anonymous_enable=YES                         //是否启用匿名用户
+    anonymous_enable=YES                         //是否启用匿名用户
     write_enable=YES                          //是否启用写权限，基于全局
     anon_upload_enable=YES                    //是否允许匿名用户上传文件
     anon_umask=022                            //匿名用户创建文件时的权限掩码

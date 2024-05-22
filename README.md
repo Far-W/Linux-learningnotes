@@ -793,11 +793,11 @@ wenjianming.html     //进入这个文件可进行网页内容的撰写
         -------------------------------------------
         $TTL 1D
 		@	IN SOA	s.com. root.s.com. (
-							0	; serial
-							1D	; refresh
-							1H	; retry
-							1W	; expire
-							3H )	; minimum
+					0	; serial
+					1D	; refresh
+					1H	; retry
+					1W	; expire
+					3H )	; minimum
 		@ IN NS dns.s.com.
 		dns IN A 192.168.1.1
 		www IN A 192.168.1.1
@@ -816,7 +816,7 @@ wenjianming.html     //进入这个文件可进行网页内容的撰写
 [root@localhost named]# vim /etc/httpd/conf.d/ymvh.conf
 		--------------------------------------------------
         <VirtualHost 192.168.1.1>
-   			ServerAdmin webmaster@s.com
+		ServerAdmin webmaster@s.com
     		DocumentRoot /var/webs/s
     		ServerName www.s.com
     		directoryindex index.html
@@ -830,138 +830,5 @@ wenjianming.html     //进入这个文件可进行网页内容的撰写
 		--------------------------------------------------
 [root@localhost named]# systemctl restart httpd
 [root@localhost named]# systemctl restart named
-
-```
-
-
-
-
-# 第八次ftp服务器理论到部署
-## 理论
-```
-ftp工作原理：
-    双端口：20 （数据）  21（控制端口）在监听状态下，保持一直开启
-    主动模式：
-        客户端发送PORT命令，服务器回送一个端口，客户端连接该端口
-    被动模式：
-        客户端发送PORT命令，服务器回送一个端口，客户端连接该端口
-    ftp三种登录方式：
-        匿名登录：
-            用户名：anonymous
-            密码：空
-        本地用户登录：
-            用户名：本地用户
-            密码：本地用户密码
-        虚拟用户登录：
-            用户名：虚拟用户
-            密码：虚拟用户密码
-        FTP软件：
-            vsftpd        //RH内置该软件
-            proftpd       
-            pureftpd
-            Wu-FTP
-        安装ftp服务器软件包：
-            yum -y install vsftpd
-
-```
-- 配置步骤及相应文件
----
-```
-    /etc/vsftpd/vsftpd.conf        //主配置文件
-    ---
-    /etc/pam.d/vsftpd        //   虚拟账户
-    ---
-    /var/ftp/                 //匿名用户主目录
-    ---
-    /etc/vsftpd/ftpusers        //禁止使用的用户列表（黑名单）
-    ---
-    /etc/vsftpd/user_list        //禁止或允许使用的用户列表
-         --- 文件中的用户不能访问ftp
-         userlist_enable=yes
-         userlist_deny=yes
-         --- 文件中的用户能访问ftp
-         userlist_enable=yes
-         userlist_deny=no
-    ftp地址形式：
-        ftp://用户名:密码@ftp server(域名)/端口号/路径/文件名。
-
-
-```
-
-- 具体配置步骤
-
-```
-/etc/vsftpd/vsftpd.conf
-----------------------------------------------------
-    anonymous_enable=YES                       //是否启用匿名用户
-    write_enable=YES                           //是否启用写权限，基于全局
-    anon_upload_enable=YES                     //是否允许匿名用户上传文件
-    anon_umask=022                             //匿名用户创建文件时的权限掩码
-    anon_mkdir_write_enable=YES                //是否允许匿名用户创建目录并设置写权限
-    anom_other_wtite_enabke=YES                //是否允许匿名用户对其他文件设置写权限
-    dirmessage_enable=YES                      //是否在目录列表中显示消息
-    xferlog_enable=YES                         //是否记录文件传输日志
-    connect_from_port_20=YES                   //是否允许来自20端口的连接
-    xferlog_std_format=YES                     //是否使用标准日志格式
-    ftpd_banner=Welcome to myFTP service.      //设置登录服务器显示的信息
-    listen=NO                                  //是否监听IPv4连接
-    listen_ipv6=YES                            //是否监听IPv6连接
-    chroot_list_enable=YES                     //是否限制用户只能访问指定文件夹
-    chroot_list_file=/etc/vsftpd/chroot_list   //指定限制用户只能访问的文件夹列表文件
-    chroot_local_user=YES                      //是否允许本地用户访问限制的文件夹
-    pam_service_name=vsftpd                    //设置PAM服务名称
-    userlist_enable=YES                        //是否启用用户列表
-    tcp_wrappers=YES                           //是否启用TCP包装器
-
-----------------------------------------------------
-
-
-```
-        
-    `
-
-    pam_service_name=vsftpd
-    userlist_enable=YES
-    tcp_wrappers=YES
----------------------------------------------------
-
-
-```
-
-## 部署
-```
-[root@localhost ~]# yum -y install vsftpd
-[root@localhost ~]# systemctl restart vsftpd
-
-
-
-
-
-
-# 第九次Nginx Web服务器理论到部署
-## 理论
-```
-    Nginx Web:
-      优 势：防火墙、防DDOS、防CC攻击、防SQL注入、防XSS攻击、防HTTP劫持、防数据篡改、防数据丢失、防数据被窃取
-      具有高性能、高并发、高可靠性的Web服务器软件。
-     
-      缺点：不支持动态网站、不支持PHP、不支持JSP
-
-    Nginx Wbe 入门简介：
-    Nginx是一个开源，支持高性能，高并发的Web服务器软件。
-    Nginx是一款轻量级的Web服务器/反向代理服务器及电子邮件（IMAP/POP3）代理服务器。
-    Nginx是由Igor Sysoev为俄罗斯访问量第二的Rambler.ru站点开发的，第一个公开版本0.1.0发布于2004年10月4日。  
-    
-```
-
-- 配置步骤及相应文件
-```
-
-
-```
-
-- 具体配置步骤
-```
-
 
 ```

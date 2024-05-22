@@ -864,6 +864,10 @@ chmod 755 -R 目录
     pam_service_name=vsftpd                   //设置PAM服务名称
     userlist_enable=YES                       //是否启用用户列表
     tcp_wrappers=YES                          //是否启用TCP包装器
+    pam_service_name=vsftpd                   //设置PAM服务名称
+    userlist_enable=YES                       //是否启用用户列表
+    tcp_wrappers=YES                          //是否启用TCP包装器
+
 
 --------------------------------------------------------------------------------
 

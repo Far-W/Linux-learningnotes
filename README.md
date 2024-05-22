@@ -832,3 +832,45 @@ wenjianming.html     //进入这个文件可进行网页内容的撰写
 [root@localhost named]# systemctl restart named
 
 ```
+
+# 第 8 次课  ftp服务器配置
+
+- 配置过程：
+创建用户目录，并且赋予权限：
+useradd 用户名         要限制用户访问目录，只需要把用户创建到对应的限制文件下。
+passwd 用户名
+chown 用户:用户组 目录  
+chmod 755 -R 目录
+	
+配置文件：vim /etc/vsftpd/vsftpd.conf
+		
+-------------------------------------------------------------------------------
+ anonymous_enable=YES                         //是否启用匿名用户
+    write_enable=YES                          //是否启用写权限，基于全局
+    anon_upload_enable=YES                    //是否允许匿名用户上传文件
+    anon_umask=022                            //匿名用户创建文件时的权限掩码
+    anon_mkdir_write_enable=YES               //是否允许匿名用户创建目录并设置写权限
+    anom_other_wtite_enabke=YES               //是否允许匿名用户对其他文件设置写权限
+    dirmessage_enable=YES                     //是否在目录列表中显示消息
+    xferlog_enable=YES                        //是否记录文件传输日志
+    connect_from_port_20=YES                  //是否允许来自20端口的连接
+    xferlog_std_format=YES                    //是否使用标准日志格式
+    ftpd_banner=Welcome to myFTP service.     //设置登录服务器显示的信息
+    listen=NO                                 //是否监听IPv4连接
+    listen_ipv6=YES                           //是否监听IPv6连接
+    chroot_list_enable=YES                    //是否限制用户只能访问指定文件夹，如本身
+    chroot_list_file=/etc/vsftpd/chroot_list  //指定限制用户只能访问的文件夹列表文件
+    chroot_local_user=YES                     //是否允许本地用户访问限制的文件夹
+    pam_service_name=vsftpd                   //设置PAM服务名称
+    userlist_enable=YES                       //是否启用用户列表
+    tcp_wrappers=YES                          //是否启用TCP包装器
+
+--------------------------------------------------------------------------------
+
+-配置限制用户访问文件夹：vim /etc/vsftpd/chroot_list
+---
+添加受限用户，每个用户单独一行
+---
+
+
+- 配置完以上文件。及关闭防火墙，启动ftp服务
